@@ -46,103 +46,89 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-white flex items-center justify-center py-8 px-4">
+    <main className="min-h-screen bg-white flex items-center justify-center px-4">
       <div className="w-full max-w-md">
-        {/* Card de Login */}
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden border-t-4 border-green-500">
-          {/* Header com Logo */}
-          <div className="bg-gradient-to-r from-green-500 to-blue-500 p-8 flex flex-col items-center">
+        {/* Logo */}
+        <div className="flex justify-center mb-12">
+          <Link href="/reservas">
             <Image
               src="/logo.png"
               alt="Sítio Lago Verde"
-              width={120}
-              height={80}
-              className="object-contain mb-4"
+              width={100}
+              height={70}
+              className="object-contain"
               priority
             />
-            <h1 className="text-2xl font-bold text-white">Sítio Lago Verde</h1>
-            <p className="text-green-100 text-sm mt-1">Faça login em sua conta</p>
-          </div>
-
-          {/* Conteúdo */}
-          <div className="p-8">
-            {/* Erro */}
-            {error && (
-              <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-lg flex gap-3">
-                <span className="text-xl">⚠️</span>
-                <div>
-                  <p className="font-semibold text-sm">Erro ao fazer login</p>
-                  <p className="text-sm">{error}</p>
-                </div>
-              </div>
-            )}
-
-            {/* Formulário */}
-            <div className="space-y-4">
-              {/* Email */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Email *</label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="seu@email.com"
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-green-500 focus:bg-green-50 transition-all"
-                />
-              </div>
-
-              {/* Senha */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Senha *</label>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••"
-                  onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-green-500 focus:bg-green-50 transition-all"
-                />
-              </div>
-
-              {/* Botão */}
-              <button
-                onClick={handleLogin}
-                disabled={loading}
-                className={`w-full py-3 rounded-lg font-bold text-white text-lg transition-all duration-200 ${
-                  loading
-                    ? 'bg-gray-400 cursor-not-allowed'
-                    : 'bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 cursor-pointer shadow-lg hover:shadow-xl'
-                }`}
-              >
-                {loading ? '⏳ Entrando...' : '✅ Fazer Login'}
-              </button>
-            </div>
-
-            {/* Divider */}
-            <div className="my-6 flex items-center gap-3">
-              <div className="flex-1 h-px bg-gray-200"></div>
-              <span className="text-gray-500 text-sm">ou</span>
-              <div className="flex-1 h-px bg-gray-200"></div>
-            </div>
-
-            {/* Links */}
-            <div className="space-y-3 text-center">
-              <div className="text-gray-600">
-                Não tem conta?{' '}
-                <Link href="/auth/register" className="text-green-600 font-semibold hover:underline">
-                  Crie uma agora
-                </Link>
-              </div>
-              <Link href="/reservas" className="inline-block text-blue-600 font-semibold hover:underline">
-                ← Voltar para reservas
-              </Link>
-            </div>
-          </div>
+          </Link>
         </div>
 
-        {/* Footer Info */}
-        <div className="mt-8 text-center text-gray-500 text-sm">
-          <p>🛡️ Seus dados estão seguros conosco</p>
+        {/* Card */}
+        <div className="space-y-8">
+          {/* Título */}
+          <div className="text-center">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Faça seu login</h1>
+            <p className="text-gray-600">Acesse sua conta para continuar</p>
+          </div>
+
+          {/* Erro */}
+          {error && (
+            <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-sm text-red-700 font-medium">{error}</p>
+            </div>
+          )}
+
+          {/* Formulário */}
+          <div className="space-y-4">
+            {/* Email */}
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-2">Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="seu@email.com"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+              />
+            </div>
+
+            {/* Senha */}
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-2">Senha</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••"
+                onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+              />
+            </div>
+
+            {/* Botão */}
+            <button
+              onClick={handleLogin}
+              disabled={loading}
+              className="w-full py-3 bg-gray-900 text-white font-medium rounded-lg hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
+            >
+              {loading ? 'Entrando...' : 'Entrar'}
+            </button>
+          </div>
+
+          {/* Links */}
+          <div className="text-center space-y-3">
+            <p className="text-sm text-gray-600">
+              Não tem conta?{' '}
+              <Link href="/auth/register" className="text-gray-900 font-medium hover:underline">
+                Crie uma agora
+              </Link>
+            </p>
+            <Link
+              href="/reservas"
+              className="inline-block text-sm text-gray-600 hover:underline"
+            >
+              ← Voltar para reservas
+            </Link>
+          </div>
         </div>
       </div>
     </main>

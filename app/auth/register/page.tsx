@@ -71,130 +71,119 @@ export default function RegisterPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-white flex items-center justify-center py-8 px-4">
+    <main className="min-h-screen bg-white flex items-center justify-center px-4">
       <div className="w-full max-w-md">
-        {/* Card de Registro */}
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden border-t-4 border-green-500">
-          {/* Header com Logo */}
-          <div className="bg-gradient-to-r from-green-500 to-blue-500 p-8 flex flex-col items-center">
+        {/* Logo */}
+        <div className="flex justify-center mb-12">
+          <Link href="/reservas">
             <Image
               src="/logo.png"
               alt="Sítio Lago Verde"
-              width={120}
-              height={80}
-              className="object-contain mb-4"
+              width={100}
+              height={70}
+              className="object-contain"
               priority
             />
-            <h1 className="text-2xl font-bold text-white">Sítio Lago Verde</h1>
-            <p className="text-green-100 text-sm mt-1">Crie sua conta</p>
-          </div>
-
-          {/* Conteúdo */}
-          <div className="p-8">
-            {/* Erro */}
-            {error && (
-              <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-lg">
-                <p className="font-semibold text-sm">⚠️ {error}</p>
-              </div>
-            )}
-
-            {/* Formulário */}
-            <div className="space-y-3">
-              {/* Nome */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Seu Nome *</label>
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="João Silva"
-                  className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-green-500 focus:bg-green-50 transition-all text-sm"
-                />
-              </div>
-
-              {/* Email */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Email *</label>
-                <input
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  placeholder="seu@email.com"
-                  className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-green-500 focus:bg-green-50 transition-all text-sm"
-                />
-              </div>
-
-              {/* Telefone */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Telefone</label>
-                <input
-                  type="tel"
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  placeholder="(11) 99999-9999"
-                  className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-green-500 focus:bg-green-50 transition-all text-sm"
-                />
-              </div>
-
-              {/* Senha */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Senha *</label>
-                <input
-                  type="password"
-                  value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  placeholder="••••••"
-                  className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-green-500 focus:bg-green-50 transition-all text-sm"
-                />
-                <p className="text-xs text-gray-500 mt-1">Mínimo 6 caracteres</p>
-              </div>
-
-              {/* Confirmar Senha */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Confirmar Senha *</label>
-                <input
-                  type="password"
-                  value={formData.passwordConfirm}
-                  onChange={(e) => setFormData({ ...formData, passwordConfirm: e.target.value })}
-                  placeholder="••••••"
-                  className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-green-500 focus:bg-green-50 transition-all text-sm"
-                />
-              </div>
-
-              {/* Botão */}
-              <button
-                onClick={handleRegister}
-                disabled={loading}
-                className={`w-full py-3 rounded-lg font-bold text-white text-lg transition-all duration-200 mt-6 ${
-                  loading
-                    ? 'bg-gray-400 cursor-not-allowed'
-                    : 'bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 cursor-pointer shadow-lg hover:shadow-xl'
-                }`}
-              >
-                {loading ? '⏳ Criando conta...' : '✅ Criar Conta'}
-              </button>
-            </div>
-
-            {/* Divider */}
-            <div className="my-6 flex items-center gap-3">
-              <div className="flex-1 h-px bg-gray-200"></div>
-              <span className="text-gray-500 text-sm">ou</span>
-              <div className="flex-1 h-px bg-gray-200"></div>
-            </div>
-
-            {/* Link para login */}
-            <div className="text-center text-sm text-gray-600">
-              Já tem conta?{' '}
-              <Link href="/auth/login" className="text-green-600 font-semibold hover:underline">
-                Faça login
-              </Link>
-            </div>
-          </div>
+          </Link>
         </div>
 
-        {/* Footer Info */}
-        <div className="mt-8 text-center text-gray-500 text-sm">
-          <p>🔐 Seus dados estão 100% seguros</p>
+        {/* Card */}
+        <div className="space-y-8">
+          {/* Título */}
+          <div className="text-center">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Crie sua conta</h1>
+            <p className="text-gray-600">Junte-se a nós para fazer reservas</p>
+          </div>
+
+          {/* Erro */}
+          {error && (
+            <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-sm text-red-700 font-medium">{error}</p>
+            </div>
+          )}
+
+          {/* Formulário */}
+          <div className="space-y-4">
+            {/* Nome */}
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-2">Seu Nome</label>
+              <input
+                type="text"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                placeholder="João Silva"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+              />
+            </div>
+
+            {/* Email */}
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-2">Email</label>
+              <input
+                type="email"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                placeholder="seu@email.com"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+              />
+            </div>
+
+            {/* Telefone */}
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-2">Telefone</label>
+              <input
+                type="tel"
+                value={formData.phone}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                placeholder="(11) 99999-9999"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+              />
+            </div>
+
+            {/* Senha */}
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-2">Senha</label>
+              <input
+                type="password"
+                value={formData.password}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                placeholder="••••••"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+              />
+              <p className="text-xs text-gray-500 mt-1">Mínimo 6 caracteres</p>
+            </div>
+
+            {/* Confirmar Senha */}
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-2">Confirmar Senha</label>
+              <input
+                type="password"
+                value={formData.passwordConfirm}
+                onChange={(e) => setFormData({ ...formData, passwordConfirm: e.target.value })}
+                placeholder="••••••"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+              />
+            </div>
+
+            {/* Botão */}
+            <button
+              onClick={handleRegister}
+              disabled={loading}
+              className="w-full py-3 bg-gray-900 text-white font-medium rounded-lg hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
+            >
+              {loading ? 'Criando conta...' : 'Criar Conta'}
+            </button>
+          </div>
+
+          {/* Links */}
+          <div className="text-center">
+            <p className="text-sm text-gray-600">
+              Já tem conta?{' '}
+              <Link href="/auth/login" className="text-gray-900 font-medium hover:underline">
+                Faça login
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </main>
