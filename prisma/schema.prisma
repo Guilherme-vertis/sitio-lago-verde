@@ -1,0 +1,109 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ==================== MODELOS ====================
+// Usuário/Hóspede
+model User {
+  id        String     @id @default(cuid())
+  email     String     @unique
+  name      String?
+  password  String?
+  phone     String?
+  cpf       String?
+  address   String?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  // Relacionamentos
+  bookings  Booking[]
+  reviews   Review[]
+}
+
+// Casa da Pousada
+model House {
+  id           String     @id @default(cuid())
+  name         String     // Ex: "Casa do Lago"
+  description  String?    // Descrição detalhada
+  location     String?    // Localização dentro da pousada
+  pricePerNight Float     // Preço por noite em R$
+  capacity     Int        // Quantas pessoas cabem
+  amenities    String?    // JSON: ["wifi", "ar condicionado", "piscina"]
+  photos       String?    // JSON: urls das fotos
+  active       Boolean    @default(true)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  // Relacionamentos
+  bookings     Booking[]
+}
+
+// Reserva
+model Booking {
+  id              String     @id @default(cuid())
+  houseId         String
+  userId          String?    // Pode ser nulo se for reserva anônima (pagamento direto)
+  guestName       String?    // Nome do hóspede (se não tiver login)
+  guestEmail      String?    // Email do hóspede
+  guestPhone      String?    // Telefone do hóspede
+
+  checkIn         DateTime
+  checkOut        DateTime
+  totalGuests     Int
+
+  status          String     @default("pending") // pending, confirmed, cancelled
+  totalPrice      Float
+
+  paymentStatus   String     @default("pending") // pending, completed, failed
+  mercadopagoId   String?    // ID do pagamento no Mercado Pago
+
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  // Relacionamentos
+  house           House      @relation(fields: [houseId], references: [id])
+  user            User?      @relation(fields: [userId], references: [id])
+  payment         Payment?
+  review          Review?
+}
+
+// Pagamento
+model Payment {
+  id              String     @id @default(cuid())
+  bookingId       String     @unique
+  amount          Float
+  method          String     // "pix", "cartao_credito", "cartao_debito"
+  status          String     @default("pending") // pending, completed, failed
+  mercadopagoId   String?
+
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  // Relacionamentos
+  booking         Booking    @relation(fields: [bookingId], references: [id])
+}
+
+// Avaliação/Review
+model Review {
+  id          String     @id @default(cuid())
+  bookingId   String     @unique
+  userId      String
+
+  rating      Int        // 1 a 5
+  comment     String?
+
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  // Relacionamentos
+  booking     Booking    @relation(fields: [bookingId], references: [id])
+  user        User       @relation(fields: [userId], references: [id])
+}
