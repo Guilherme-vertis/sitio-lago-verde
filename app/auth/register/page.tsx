@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -38,7 +39,6 @@ export default function RegisterPage() {
     setLoading(true)
 
     try {
-      // Criar usuário no Supabase Auth
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
@@ -46,7 +46,6 @@ export default function RegisterPage() {
 
       if (authError) throw authError
 
-      // Salvar dados adicionais na tabela users
       if (authData.user) {
         const { error: userError } = await supabase
           .from('users')
@@ -72,98 +71,130 @@ export default function RegisterPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center py-8">
-      <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full border-t-4 border-green-500">
-        <h1 className="text-3xl font-bold text-green-700 mb-2">🏡 Sítio Lago Verde</h1>
-        <p className="text-gray-600 mb-6">Crie sua conta para fazer reservas</p>
-
-        {error && (
-          <div className="mb-4 p-4 bg-red-100 border-l-4 border-red-600 text-red-700 rounded">
-            ❌ {error}
-          </div>
-        )}
-
-        <div className="space-y-4">
-          {/* Nome */}
-          <div>
-            <label className="block text-sm font-semibold mb-1">Seu Nome *</label>
-            <input
-              type="text"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              placeholder="João Silva"
-              className="w-full border-2 border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-green-500"
+    <main className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-white flex items-center justify-center py-8 px-4">
+      <div className="w-full max-w-md">
+        {/* Card de Registro */}
+        <div className="bg-white rounded-2xl shadow-xl overflow-hidden border-t-4 border-green-500">
+          {/* Header com Logo */}
+          <div className="bg-gradient-to-r from-green-500 to-blue-500 p-8 flex flex-col items-center">
+            <Image
+              src="/logo.png"
+              alt="Sítio Lago Verde"
+              width={120}
+              height={80}
+              className="object-contain mb-4"
+              priority
             />
+            <h1 className="text-2xl font-bold text-white">Sítio Lago Verde</h1>
+            <p className="text-green-100 text-sm mt-1">Crie sua conta</p>
           </div>
 
-          {/* Email */}
-          <div>
-            <label className="block text-sm font-semibold mb-1">Email *</label>
-            <input
-              type="email"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              placeholder="seu@email.com"
-              className="w-full border-2 border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-green-500"
-            />
-          </div>
+          {/* Conteúdo */}
+          <div className="p-8">
+            {/* Erro */}
+            {error && (
+              <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-lg">
+                <p className="font-semibold text-sm">⚠️ {error}</p>
+              </div>
+            )}
 
-          {/* Telefone */}
-          <div>
-            <label className="block text-sm font-semibold mb-1">Telefone</label>
-            <input
-              type="tel"
-              value={formData.phone}
-              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-              placeholder="(11) 99999-9999"
-              className="w-full border-2 border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-green-500"
-            />
-          </div>
+            {/* Formulário */}
+            <div className="space-y-3">
+              {/* Nome */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Seu Nome *</label>
+                <input
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  placeholder="João Silva"
+                  className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-green-500 focus:bg-green-50 transition-all text-sm"
+                />
+              </div>
 
-          {/* Senha */}
-          <div>
-            <label className="block text-sm font-semibold mb-1">Senha *</label>
-            <input
-              type="password"
-              value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              placeholder="••••••"
-              className="w-full border-2 border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-green-500"
-            />
-          </div>
+              {/* Email */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Email *</label>
+                <input
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  placeholder="seu@email.com"
+                  className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-green-500 focus:bg-green-50 transition-all text-sm"
+                />
+              </div>
 
-          {/* Confirmar Senha */}
-          <div>
-            <label className="block text-sm font-semibold mb-1">Confirmar Senha *</label>
-            <input
-              type="password"
-              value={formData.passwordConfirm}
-              onChange={(e) => setFormData({ ...formData, passwordConfirm: e.target.value })}
-              placeholder="••••••"
-              className="w-full border-2 border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-green-500"
-            />
-          </div>
+              {/* Telefone */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Telefone</label>
+                <input
+                  type="tel"
+                  value={formData.phone}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  placeholder="(11) 99999-9999"
+                  className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-green-500 focus:bg-green-50 transition-all text-sm"
+                />
+              </div>
 
-          {/* Botão */}
-          <button
-            onClick={handleRegister}
-            disabled={loading}
-            className={`w-full py-2 rounded-lg font-bold text-white text-lg transition-all ${
-              loading
-                ? 'bg-gray-400 cursor-not-allowed'
-                : 'bg-green-600 hover:bg-green-700 cursor-pointer'
-            }`}
-          >
-            {loading ? '⏳ Criando conta...' : '✅ Criar Conta'}
-          </button>
+              {/* Senha */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Senha *</label>
+                <input
+                  type="password"
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  placeholder="••••••"
+                  className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-green-500 focus:bg-green-50 transition-all text-sm"
+                />
+                <p className="text-xs text-gray-500 mt-1">Mínimo 6 caracteres</p>
+              </div>
 
-          {/* Link para login */}
-          <div className="text-center text-sm text-gray-600">
-            Já tem conta?{' '}
-            <Link href="/auth/login" className="text-green-600 font-semibold hover:underline">
-              Faça login
-            </Link>
+              {/* Confirmar Senha */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Confirmar Senha *</label>
+                <input
+                  type="password"
+                  value={formData.passwordConfirm}
+                  onChange={(e) => setFormData({ ...formData, passwordConfirm: e.target.value })}
+                  placeholder="••••••"
+                  className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-green-500 focus:bg-green-50 transition-all text-sm"
+                />
+              </div>
+
+              {/* Botão */}
+              <button
+                onClick={handleRegister}
+                disabled={loading}
+                className={`w-full py-3 rounded-lg font-bold text-white text-lg transition-all duration-200 mt-6 ${
+                  loading
+                    ? 'bg-gray-400 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 cursor-pointer shadow-lg hover:shadow-xl'
+                }`}
+              >
+                {loading ? '⏳ Criando conta...' : '✅ Criar Conta'}
+              </button>
+            </div>
+
+            {/* Divider */}
+            <div className="my-6 flex items-center gap-3">
+              <div className="flex-1 h-px bg-gray-200"></div>
+              <span className="text-gray-500 text-sm">ou</span>
+              <div className="flex-1 h-px bg-gray-200"></div>
+            </div>
+
+            {/* Link para login */}
+            <div className="text-center text-sm text-gray-600">
+              Já tem conta?{' '}
+              <Link href="/auth/login" className="text-green-600 font-semibold hover:underline">
+                Faça login
+              </Link>
+            </div>
           </div>
+        </div>
+
+        {/* Footer Info */}
+        <div className="mt-8 text-center text-gray-500 text-sm">
+          <p>🔐 Seus dados estão 100% seguros</p>
         </div>
       </div>
     </main>
