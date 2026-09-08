@@ -5,7 +5,6 @@ import { getHouses } from '@/lib/supabase'
 import PhotoUploader from '@/app/components/PhotoUploader'
 import PhotoGallery from '@/app/components/PhotoGallery'
 import Link from 'next/link'
-import Image from 'next/image'
 
 interface House {
   id: number
