@@ -1,0 +1,25 @@
+'use client'
+
+export default function AdminPage() {
+  return (
+    <main className="min-h-screen bg-white py-8">
+      <div className="max-w-6xl mx-auto px-4">
+        <h1 className="text-3xl font-bold text-gray-900 mb-8">🔧 Painel de Admin</h1>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Card Galeria */}
+          <a href="/admin/galeria" className="p-6 bg-blue-50 border border-blue-200 rounded-lg hover:shadow-lg transition">
+            <h2 className="text-xl font-bold text-blue-900 mb-2">📸 Galeria de Fotos</h2>
+            <p className="text-blue-700">Gerenciar fotos das casas</p>
+          </a>
+
+          {/* Card Reservas */}
+          <a href="/admin/reservas" className="p-6 bg-green-50 border border-green-200 rounded-lg hover:shadow-lg transition">
+            <h2 className="text-xl font-bold text-green-900 mb-2">📅 Gerenciar Reservas</h2>
+            <p className="text-green-700">Visualizar e gerenciar reservas</p>
+          </a>
+        </div>
+      </div>
+    </main>
+  )
+}
