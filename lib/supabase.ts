@@ -15,6 +15,7 @@ export type House = {
   capacity: number
   amenities: string[] | null
   photos: string[] | null
+  photo_url: string | null
   active: boolean
   created_at: string
   updated_at: string
