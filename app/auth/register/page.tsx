@@ -61,8 +61,8 @@ export default function RegisterPage() {
         if (userError) throw userError
       }
 
-      alert('Conta criada com sucesso! Faça login para continuar.')
-      router.push('/auth/login')
+      alert('Conta criada com sucesso! Redirecionando...')
+      router.push('/cliente/dashboard')
     } catch (err) {
       setError((err as any).message || 'Erro ao criar conta')
     } finally {
