@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { House } from '@/lib/supabase'
 import { getAllBookingsForHouse, Booking } from '@/lib/bookings'
 import { supabase } from '@/lib/supabase'
@@ -11,6 +12,7 @@ type BookingFormProps = {
 }
 
 export default function BookingForm({ house, onSuccess }: BookingFormProps) {
+  const router = useRouter()
   const [checkIn, setCheckIn] = useState('')
   const [checkOut, setCheckOut] = useState('')
   const [guestName, setGuestName] = useState('')
@@ -116,19 +118,12 @@ export default function BookingForm({ house, onSuccess }: BookingFormProps) {
 
       if (error) throw error
 
+      const bookingId = data[0]?.id
       setSuccess(true)
-      setCheckIn('')
-      setCheckOut('')
-      setGuestName('')
-      setGuestEmail('')
-      setGuestPhone('')
-
-      await loadBookings()
 
       setTimeout(() => {
-        setSuccess(false)
-        onSuccess?.()
-      }, 3000)
+        router.push(`/reservas/checkout?booking=${bookingId}`)
+      }, 2000)
     } catch (err) {
       setError('Erro ao fazer reserva: ' + (err as any).message)
     } finally {
