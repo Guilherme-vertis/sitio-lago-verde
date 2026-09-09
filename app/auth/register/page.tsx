@@ -61,12 +61,14 @@ export default function RegisterPage() {
         if (userError) throw userError
 
         // Auto-login após signup
-        const { error: signInError } = await supabase.auth.signInWithPassword({
+        const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
           email: formData.email,
           password: formData.password,
         })
 
-        if (!signInError) {
+        if (!signInError && signInData.session) {
+          localStorage.setItem('auth_token', signInData.session.access_token)
+          localStorage.setItem('user_id', authData.user.id)
           alert('Conta criada com sucesso! Redirecionando...')
           router.push('/cliente/dashboard')
         } else {
