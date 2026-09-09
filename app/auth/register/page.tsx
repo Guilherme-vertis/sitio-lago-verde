@@ -59,10 +59,21 @@ export default function RegisterPage() {
           ])
 
         if (userError) throw userError
-      }
 
-      alert('Conta criada com sucesso! Redirecionando...')
-      router.push('/cliente/dashboard')
+        // Auto-login após signup
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+          email: formData.email,
+          password: formData.password,
+        })
+
+        if (!signInError) {
+          alert('Conta criada com sucesso! Redirecionando...')
+          router.push('/cliente/dashboard')
+        } else {
+          alert('Conta criada! Por favor, faça login.')
+          router.push('/auth/login')
+        }
+      }
     } catch (err) {
       setError((err as any).message || 'Erro ao criar conta')
     } finally {
