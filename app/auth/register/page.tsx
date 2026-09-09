@@ -53,7 +53,7 @@ export default function RegisterPage() {
             {
               id: authData.user.id,
               email: formData.email,
-              name: formData.name,
+              full_name: formData.name,
               phone: formData.phone || null,
             },
           ])
