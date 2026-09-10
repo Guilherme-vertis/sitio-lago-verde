@@ -22,6 +22,7 @@ export default function BookingForm({ house, onSuccess }: BookingFormProps) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
+  const [checkoutUrl, setCheckoutUrl] = useState('')
 
   useEffect(() => {
     loadBookings()
@@ -121,9 +122,15 @@ export default function BookingForm({ house, onSuccess }: BookingFormProps) {
       if (!data || !data[0]) throw new Error('Erro ao criar reserva')
 
       const bookingId = data[0].id
+      const checkoutLink = `/reservas/checkout?booking=${bookingId}`
 
-      // Redirecionar usando router.replace
-      router.replace(`/reservas/checkout?booking=${bookingId}`)
+      setCheckoutUrl(checkoutLink)
+      setSuccess(true)
+
+      // Tentar redirecionar automaticamente
+      setTimeout(() => {
+        router.replace(checkoutLink)
+      }, 2000)
     } catch (err) {
       setError('Erro ao fazer reserva: ' + (err as any).message)
     } finally {
@@ -159,7 +166,16 @@ export default function BookingForm({ house, onSuccess }: BookingFormProps) {
       {/* Mensagem de sucesso */}
       {success && (
         <div className="mb-4 p-4 bg-green-100 border-l-4 border-green-600 text-green-700 rounded">
-          ✅ Reserva criada com sucesso! Você receberá um email de confirmação.
+          <p className="font-semibold mb-2">✅ Reserva criada com sucesso!</p>
+          <p className="text-sm mb-3">Redirecionando para pagamento...</p>
+          {checkoutUrl && (
+            <a
+              href={checkoutUrl}
+              className="inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded font-semibold"
+            >
+              → Ir para Pagamento
+            </a>
+          )}
         </div>
       )}
 
