@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { supabase } from '@/lib/supabase'
 
 interface MercadoPagoCheckoutProps {
   bookingId: number
@@ -31,6 +32,26 @@ export default function MercadoPagoCheckout({
   const router = useRouter()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [pollInterval, setPollInterval] = useState<NodeJS.Timeout | null>(null)
+
+  // Polling para verificar se pagamento foi aprovado
+  async function checkPaymentStatus() {
+    try {
+      const { data, error: err } = await supabase
+        .from('bookings')
+        .select('status')
+        .eq('id', bookingId)
+        .single()
+
+      if (!err && data?.status === 'paid') {
+        // Pagamento foi aprovado! Redirecionar
+        if (pollInterval) clearInterval(pollInterval)
+        router.replace(`/reservas/confirmacao?booking=${bookingId}`)
+      }
+    } catch (err) {
+      console.error('Erro ao verificar status:', err)
+    }
+  }
 
   useEffect(() => {
     // Carregar script do Mercado Pago
@@ -91,6 +112,13 @@ export default function MercadoPagoCheckout({
           onReady: () => {
             console.log('Wallet Brick ready')
             setLoading(false)
+
+            // Iniciar polling para verificar se pagamento foi aprovado
+            const interval = setInterval(() => {
+              checkPaymentStatus()
+            }, 2000) // Verificar a cada 2 segundos
+
+            setPollInterval(interval)
           },
           onSubmit: async (formData: any) => {
             console.log('Pagamento iniciado:', formData)
@@ -112,6 +140,7 @@ export default function MercadoPagoCheckout({
       if (document.head.contains(script)) {
         document.head.removeChild(script)
       }
+      if (pollInterval) clearInterval(pollInterval)
     }
   }, [bookingId, guestName, guestEmail, amount, houseName, checkIn, checkOut])
 
