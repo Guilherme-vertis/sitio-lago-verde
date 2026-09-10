@@ -55,17 +55,26 @@ export default function ConfirmacaoContent() {
     )
   }
 
+  const isPaid = booking.status === 'paid'
+  const isConfirmed = booking.status === 'confirmed'
+
   return (
-    <main className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 py-12">
+    <main className={`min-h-screen py-12 ${isConfirmed ? 'bg-gradient-to-br from-green-50 to-blue-50' : 'bg-gradient-to-br from-blue-50 to-cyan-50'}`}>
       <div className="max-w-2xl mx-auto px-4">
         <div className="bg-white rounded-lg shadow-lg p-8">
-          {/* Ícone de sucesso */}
+          {/* Ícone baseado no status */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
-              <span className="text-4xl">✅</span>
+            <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 ${isConfirmed ? 'bg-green-100' : 'bg-blue-100'}`}>
+              <span className="text-4xl">{isConfirmed ? '✅' : '⏳'}</span>
             </div>
-            <h1 className="text-3xl font-bold text-green-700 mb-2">Pagamento Confirmado!</h1>
-            <p className="text-gray-600">Sua reserva foi confirmada com sucesso</p>
+            <h1 className={`text-3xl font-bold mb-2 ${isConfirmed ? 'text-green-700' : 'text-blue-700'}`}>
+              {isConfirmed ? 'Pagamento Confirmado!' : 'Pagamento Recebido!'}
+            </h1>
+            <p className="text-gray-600">
+              {isConfirmed
+                ? 'Sua reserva foi confirmada com sucesso'
+                : 'Seu pagamento foi recebido. Aguardando aprovação do administrador'}
+            </p>
           </div>
 
           {/* Detalhes da reserva */}
@@ -77,7 +86,9 @@ export default function ConfirmacaoContent() {
               </div>
               <div>
                 <p className="text-sm text-gray-600">Status</p>
-                <p className="text-lg font-bold text-green-700">✅ Confirmada</p>
+                <p className={`text-lg font-bold ${isConfirmed ? 'text-green-700' : 'text-blue-700'}`}>
+                  {isConfirmed ? '✅ Confirmada' : '⏳ Pagamento Recebido'}
+                </p>
               </div>
             </div>
 

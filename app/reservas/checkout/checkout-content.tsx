@@ -84,13 +84,35 @@ export default function CheckoutContent() {
               <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
                 <div className="text-5xl mb-3">✅</div>
                 <h3 className="text-xl font-bold text-green-700 mb-2">Pagamento Confirmado!</h3>
-                <p className="text-green-600 mb-6">Esta reserva já foi paga.</p>
+                <p className="text-green-600 mb-6">Esta reserva já foi paga e confirmada.</p>
                 <button
                   onClick={() => router.push('/cliente/dashboard')}
                   className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium"
                 >
                   Ver Minhas Reservas
                 </button>
+              </div>
+            ) : booking.status === 'paid' ? (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 text-center">
+                <div className="text-5xl mb-3">⏳</div>
+                <h3 className="text-xl font-bold text-blue-700 mb-2">Pagamento Feito!</h3>
+                <p className="text-blue-600 mb-6">
+                  Seu pagamento foi recebido com sucesso. Aguardando aprovação do administrador do sítio para confirmar sua reserva.
+                </p>
+                <div className="flex gap-3 justify-center">
+                  <button
+                    onClick={() => router.push('/cliente/dashboard')}
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium"
+                  >
+                    Voltar ao Dashboard
+                  </button>
+                  <button
+                    onClick={() => router.push('/reservas')}
+                    className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg font-medium"
+                  >
+                    Fazer Nova Reserva
+                  </button>
+                </div>
               </div>
             ) : (
               <MercadoPagoCheckout
