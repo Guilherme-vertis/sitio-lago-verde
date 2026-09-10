@@ -9,6 +9,8 @@ export type Booking = {
   check_out: string
   total_price: number | null
   status: string
+  payment_status: string | null
+  admin_confirmed: boolean
   created_at: string
   updated_at: string
 }

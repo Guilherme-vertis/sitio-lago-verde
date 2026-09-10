@@ -66,6 +66,32 @@ export default function BookingsAdmin() {
     }
   }
 
+  // Confirmar reserva (setar admin_confirmed = true)
+  async function confirmBooking(bookingId: number) {
+    try {
+      const booking = bookings.find((b) => b.id === bookingId)
+      if (!booking) return
+
+      // Se status já é 'confirmed', mantém assim. Caso contrário, apenas seta admin_confirmed = true
+      const updateData: any = { admin_confirmed: true }
+      if (booking.status !== 'confirmed') {
+        // Não muda o status, apenas confirma o admin
+      }
+
+      const { error } = await supabase
+        .from('bookings')
+        .update(updateData)
+        .eq('id', bookingId)
+
+      if (error) throw error
+
+      alert('Reserva confirmada com sucesso!')
+      loadData()
+    } catch (err) {
+      alert('Erro ao confirmar: ' + (err as any).message)
+    }
+  }
+
   // Deletar reserva
   async function deleteBooking(bookingId: number) {
     if (!confirm('Tem certeza que quer deletar esta reserva?')) return
@@ -161,26 +187,52 @@ export default function BookingsAdmin() {
   }
 
   // Status color
-  function getStatusColor(status: string): string {
-    switch (status) {
-      case 'confirmed':
+  function getStatusColor(booking: Booking): string {
+    const displayStatus = getDisplayStatus(booking)
+    switch (displayStatus) {
+      case 'Confirmada':
         return 'bg-green-100 text-green-800'
-      case 'pending':
+      case 'Pagamento Recebido':
+        return 'bg-blue-100 text-blue-800'
+      case 'Pendente':
         return 'bg-yellow-100 text-yellow-800'
-      case 'cancelled':
+      case 'Cancelada':
         return 'bg-red-100 text-red-800'
       default:
         return 'bg-gray-100 text-gray-800'
     }
   }
 
-  function getStatusLabel(status: string): string {
+  function getDisplayStatus(booking: Booking): string {
+    // "Pendente" = status is 'pending'
+    if (booking.status === 'pending') {
+      return 'Pendente'
+    }
+    // "Pagamento Recebido" = status is 'paid' AND admin_confirmed is false
+    if (booking.status === 'paid' && !booking.admin_confirmed) {
+      return 'Pagamento Recebido'
+    }
+    // "Confirmada" = status is 'confirmed' OR admin_confirmed is true
+    if (booking.status === 'confirmed' || booking.admin_confirmed) {
+      return 'Confirmada'
+    }
+    // "Cancelada" = status is 'cancelled'
+    if (booking.status === 'cancelled') {
+      return 'Cancelada'
+    }
+    return booking.status
+  }
+
+  function getStatusLabel(booking: Booking): string {
+    const status = getDisplayStatus(booking)
     switch (status) {
-      case 'confirmed':
+      case 'Confirmada':
         return '✅ Confirmada'
-      case 'pending':
+      case 'Pagamento Recebido':
+        return '💳 Pagamento Recebido'
+      case 'Pendente':
         return '⏳ Pendente'
-      case 'cancelled':
+      case 'Cancelada':
         return '❌ Cancelada'
       default:
         return status
@@ -340,20 +392,20 @@ export default function BookingsAdmin() {
         <div className="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500">
           <p className="text-gray-600 text-sm">Pendentes</p>
           <p className="text-2xl font-bold text-yellow-700">
-            {bookings.filter((b) => b.status === 'pending').length}
+            {bookings.filter((b) => b.status === 'pending' || (b.status === 'paid' && !b.admin_confirmed)).length}
           </p>
         </div>
         <div className="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
           <p className="text-gray-600 text-sm">Confirmadas</p>
           <p className="text-2xl font-bold text-green-700">
-            {bookings.filter((b) => b.status === 'confirmed').length}
+            {bookings.filter((b) => b.admin_confirmed).length}
           </p>
         </div>
         <div className="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-500">
           <p className="text-gray-600 text-sm">Receita</p>
           <p className="text-2xl font-bold text-purple-700">
             R$ {bookings
-              .filter((b) => b.status === 'confirmed')
+              .filter((b) => b.admin_confirmed)
               .reduce((sum, b) => sum + (b.total_price || 0), 0)
               .toFixed(2)}
           </p>
@@ -378,6 +430,8 @@ export default function BookingsAdmin() {
                 <th className="px-4 py-3 text-left font-semibold">📅 Check-in</th>
                 <th className="px-4 py-3 text-left font-semibold">📅 Check-out</th>
                 <th className="px-4 py-3 text-right font-semibold">💰 Total</th>
+                <th className="px-4 py-3 text-center font-semibold">💳 Pagamento</th>
+                <th className="px-4 py-3 text-center font-semibold">✅ Confirmada</th>
                 <th className="px-4 py-3 text-center font-semibold">Status</th>
                 <th className="px-4 py-3 text-center font-semibold">Ações</th>
               </tr>
@@ -405,15 +459,25 @@ export default function BookingsAdmin() {
                     R$ {(booking.total_price || 0).toFixed(2)}
                   </td>
                   <td className="px-4 py-3 text-center">
-                    <span className={`px-3 py-1 rounded-full font-semibold text-xs ${getStatusColor(booking.status)}`}>
-                      {getStatusLabel(booking.status)}
+                    <span className="px-3 py-1 rounded-full font-semibold text-xs bg-gray-100 text-gray-800">
+                      {booking.payment_status || 'N/A'}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3 text-center">
+                    <span className={`px-3 py-1 rounded-full font-semibold text-xs ${booking.admin_confirmed ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                      {booking.admin_confirmed ? 'Confirmada' : 'Pendente'}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3 text-center">
+                    <span className={`px-3 py-1 rounded-full font-semibold text-xs ${getStatusColor(booking)}`}>
+                      {getStatusLabel(booking)}
                     </span>
                   </td>
                   <td className="px-4 py-3 text-center">
                     <div className="flex gap-2 justify-center">
-                      {booking.status === 'pending' && (
+                      {!booking.admin_confirmed && (
                         <button
-                          onClick={() => updateBookingStatus(booking.id, 'confirmed')}
+                          onClick={() => confirmBooking(booking.id)}
                           className="bg-green-500 text-white px-3 py-1 rounded text-xs hover:bg-green-600 font-semibold"
                         >
                           ✅ Confirmar
