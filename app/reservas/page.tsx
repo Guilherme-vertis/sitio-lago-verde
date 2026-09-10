@@ -3,6 +3,9 @@ import BookingForm from '../components/BookingForm'
 import Link from 'next/link'
 import Image from 'next/image'
 
+// Força sempre buscar dados frescos do Supabase
+export const dynamic = 'force-dynamic'
+
 export default async function ReservasPage() {
   const houses = await getHouses()
 
