@@ -43,12 +43,14 @@ export default function MercadoPagoCheckout({
 
       if (!window.MercadoPago || !publicKey) {
         setError('Erro ao carregar Mercado Pago')
+        setLoading(false)
         return
       }
 
-      window.MercadoPago.setPublishableKey(publicKey)
-
       try {
+        // Inicializar Mercado Pago com a chave pública
+        const mp = new window.MercadoPago(publicKey)
+
         // Criar preferência de pagamento
         const response = await fetch('/api/mercado-pago/create-preference', {
           method: 'POST',
@@ -68,28 +70,24 @@ export default function MercadoPagoCheckout({
 
         const { preferenceId } = await response.json()
 
-        // Criar instância de Wallet Brick
-        const bricksBuilder = window.MercadoPago.Bricks
+        // Renderizar Wallet Brick
+        const bricksBuilder = mp.Bricks()
 
-        const renderComponent = async () => {
-          await bricksBuilder.create('wallet', {
-            initialization: {
-              preferenceId: preferenceId,
-            },
-            onSubmit: async (formData: any) => {
-              console.log('Pagamento iniciado:', formData)
-            },
-            onError: (error: any) => {
-              console.error('Erro no Brick:', error)
-              setError('Erro ao processar pagamento')
-            },
-            onReady: () => {
-              setLoading(false)
-            },
-          })
-        }
-
-        await renderComponent()
+        await bricksBuilder.create('wallet', {
+          initialization: {
+            preferenceId: preferenceId,
+          },
+          onSubmit: async (formData: any) => {
+            console.log('Pagamento iniciado:', formData)
+          },
+          onError: (error: any) => {
+            console.error('Erro no Brick:', error)
+            setError('Erro ao processar pagamento')
+          },
+          onReady: () => {
+            setLoading(false)
+          },
+        })
       } catch (err) {
         setError((err as any).message || 'Erro ao carregar checkout')
         setLoading(false)
