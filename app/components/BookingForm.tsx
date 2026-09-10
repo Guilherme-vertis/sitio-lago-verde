@@ -122,8 +122,8 @@ export default function BookingForm({ house, onSuccess }: BookingFormProps) {
 
       const bookingId = data[0].id
 
-      // Redirecionar imediatamente
-      window.location.href = `/reservas/checkout?booking=${bookingId}`
+      // Redirecionar usando router.replace
+      router.replace(`/reservas/checkout?booking=${bookingId}`)
     } catch (err) {
       setError('Erro ao fazer reserva: ' + (err as any).message)
     } finally {
