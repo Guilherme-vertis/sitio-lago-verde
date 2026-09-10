@@ -73,8 +73,11 @@ export default function ClientDashboardPage() {
     return houses.find((h) => h.id === houseId)?.name || `Casa ${houseId}`
   }
 
-  function getStatusColor(status: string): string {
-    switch (status) {
+  function getStatusColor(booking: Booking): string {
+    if (booking.status === 'paid' && !booking.admin_confirmed) {
+      return 'bg-blue-100 text-blue-800'
+    }
+    switch (booking.status) {
       case 'confirmed':
         return 'bg-green-100 text-green-800'
       case 'pending':
@@ -86,8 +89,11 @@ export default function ClientDashboardPage() {
     }
   }
 
-  function getStatusLabel(status: string): string {
-    switch (status) {
+  function getStatusLabel(booking: Booking): string {
+    if (booking.status === 'paid' && !booking.admin_confirmed) {
+      return '⏳ Pago - Aguardando Aprovação'
+    }
+    switch (booking.status) {
       case 'confirmed':
         return '✅ Confirmada'
       case 'pending':
@@ -95,7 +101,7 @@ export default function ClientDashboardPage() {
       case 'cancelled':
         return '❌ Cancelada'
       default:
-        return status
+        return booking.status
     }
   }
 
@@ -135,14 +141,14 @@ export default function ClientDashboardPage() {
           <div className="bg-white p-6 rounded-lg shadow-md border-l-4 border-green-500">
             <p className="text-gray-600 text-sm">Reservas Confirmadas</p>
             <p className="text-3xl font-bold text-green-700">
-              {bookings.filter((b) => b.status === 'confirmed').length}
+              {bookings.filter((b) => b.status === 'confirmed' || b.admin_confirmed).length}
             </p>
           </div>
           <div className="bg-white p-6 rounded-lg shadow-md border-l-4 border-yellow-500">
             <p className="text-gray-600 text-sm">Gasto Total</p>
             <p className="text-3xl font-bold text-yellow-700">
               R$ {bookings
-                .filter((b) => b.status === 'confirmed')
+                .filter((b) => b.status === 'confirmed' || b.admin_confirmed)
                 .reduce((sum, b) => sum + (b.total_price || 0), 0)
                 .toFixed(2)}
             </p>
@@ -200,10 +206,10 @@ export default function ClientDashboardPage() {
                       <td className="px-4 py-3 text-center">
                         <span
                           className={`px-3 py-1 rounded-full font-semibold text-xs ${getStatusColor(
-                            booking.status
+                            booking
                           )}`}
                         >
-                          {getStatusLabel(booking.status)}
+                          {getStatusLabel(booking)}
                         </span>
                       </td>
                     </tr>
