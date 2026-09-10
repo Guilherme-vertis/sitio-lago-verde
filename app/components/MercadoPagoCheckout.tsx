@@ -49,7 +49,7 @@ export default function MercadoPagoCheckout({
 
       try {
         // Inicializar Mercado Pago com a chave pública
-        const mp = new window.MercadoPago(publicKey)
+        const mp = new window.MercadoPago(publicKey, { locale: 'pt-BR' })
 
         // Criar preferência de pagamento
         const response = await fetch('/api/mercado-pago/create-preference', {
