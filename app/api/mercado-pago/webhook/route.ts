@@ -31,11 +31,11 @@ export async function POST(request: NextRequest) {
     const bookingId = parseInt(payment.external_reference)
 
     if (payment.status === 'approved') {
-      // Atualizar status da reserva para confirmada
+      // Atualizar status da reserva para paga (admin confirma depois)
       const { error } = await supabase
         .from('bookings')
         .update({
-          status: 'confirmed',
+          status: 'paid',
           payment_id: payment.id,
           payment_status: 'approved',
         })
