@@ -20,7 +20,8 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json()
-    const dataId = body?.data?.id
+    // Mercado Pago pode enviar data.id ou apenas id
+    const dataId = body?.data?.id || body?.id
 
     // Validar presença de dados
     if (!ts || !v1 || !dataId || !requestId) {
@@ -70,9 +71,10 @@ export async function POST(request: NextRequest) {
 
 async function processNotification(body: any) {
   const { data, type } = body
+  const paymentId = data?.id || body?.id
 
-  if (!data || !data.id) {
-    console.warn('Notificação sem data.id')
+  if (!paymentId) {
+    console.warn('Notificação sem ID de pagamento')
     return
   }
 
@@ -87,7 +89,7 @@ async function processNotification(body: any) {
   try {
     // Buscar detalhes do pagamento
     const paymentResponse = await fetch(
-      `https://api.mercadopago.com/v1/payments/${data.id}`,
+      `https://api.mercadopago.com/v1/payments/${paymentId}`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
