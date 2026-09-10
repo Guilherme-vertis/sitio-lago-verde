@@ -1,7 +1,7 @@
 import { getHouses } from '@/lib/supabase'
 import BookingForm from '../components/BookingForm'
+import ReservasHeader from '../components/ReservasHeader'
 import Link from 'next/link'
-import Image from 'next/image'
 
 // Força sempre buscar dados frescos do Supabase
 export const dynamic = 'force-dynamic'
@@ -11,27 +11,7 @@ export default async function ReservasPage() {
 
   return (
     <main className="min-h-screen bg-white">
-      {/* Header Minimal */}
-      <header className="sticky top-0 z-50 bg-white border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <Image
-              src="/logo.png"
-              alt="Sítio Lago Verde"
-              width={90}
-              height={60}
-              className="object-contain"
-              priority
-            />
-          </div>
-          <Link
-            href="/cliente/dashboard"
-            className="text-gray-700 hover:bg-gray-100 px-4 py-2 rounded-lg font-medium transition-colors"
-          >
-            Minha Conta
-          </Link>
-        </div>
-      </header>
+      <ReservasHeader />
 
       {/* Hero Section - Clean */}
       <section className="bg-white py-16 md:py-24 border-b border-gray-100">

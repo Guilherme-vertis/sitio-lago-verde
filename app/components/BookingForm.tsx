@@ -23,10 +23,21 @@ export default function BookingForm({ house, onSuccess }: BookingFormProps) {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
   const [checkoutUrl, setCheckoutUrl] = useState('')
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
 
   useEffect(() => {
     loadBookings()
+    loadUserData()
   }, [house.id])
+
+  async function loadUserData() {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user) {
+      setIsLoggedIn(true)
+      setGuestName(user.user_metadata?.full_name || user.email?.split('@')[0] || '')
+      setGuestEmail(user.email || '')
+    }
+  }
 
   async function loadBookings() {
     const data = await getAllBookingsForHouse(house.id)
@@ -211,39 +222,52 @@ export default function BookingForm({ house, onSuccess }: BookingFormProps) {
           </div>
         </div>
 
-        {/* Dados do hóspede */}
-        <div>
-          <label className="block text-sm font-semibold mb-1">Seu Nome *</label>
-          <input
-            type="text"
-            value={guestName}
-            onChange={(e) => setGuestName(e.target.value)}
-            placeholder="João Silva"
-            className="w-full border-2 border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-green-500"
-          />
-        </div>
+        {/* Dados do hóspede - Apenas se não logado */}
+        {!isLoggedIn && (
+          <>
+            <div>
+              <label className="block text-sm font-semibold mb-1">Seu Nome *</label>
+              <input
+                type="text"
+                value={guestName}
+                onChange={(e) => setGuestName(e.target.value)}
+                placeholder="João Silva"
+                className="w-full border-2 border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-green-500"
+              />
+            </div>
 
-        <div>
-          <label className="block text-sm font-semibold mb-1">Seu Email *</label>
-          <input
-            type="email"
-            value={guestEmail}
-            onChange={(e) => setGuestEmail(e.target.value)}
-            placeholder="seu@email.com"
-            className="w-full border-2 border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-green-500"
-          />
-        </div>
+            <div>
+              <label className="block text-sm font-semibold mb-1">Seu Email *</label>
+              <input
+                type="email"
+                value={guestEmail}
+                onChange={(e) => setGuestEmail(e.target.value)}
+                placeholder="seu@email.com"
+                className="w-full border-2 border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-green-500"
+              />
+            </div>
 
-        <div>
-          <label className="block text-sm font-semibold mb-1">Seu Telefone</label>
-          <input
-            type="tel"
-            value={guestPhone}
-            onChange={(e) => setGuestPhone(e.target.value)}
-            placeholder="(11) 99999-9999"
-            className="w-full border-2 border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-green-500"
-          />
-        </div>
+            <div>
+              <label className="block text-sm font-semibold mb-1">Seu Telefone</label>
+              <input
+                type="tel"
+                value={guestPhone}
+                onChange={(e) => setGuestPhone(e.target.value)}
+                placeholder="(11) 99999-9999"
+                className="w-full border-2 border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-green-500"
+              />
+            </div>
+          </>
+        )}
+
+        {/* Confirmação de dados quando logado */}
+        {isLoggedIn && (
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+            <p className="text-sm text-blue-900">
+              📧 Reservando como: <span className="font-semibold">{guestEmail}</span>
+            </p>
+          </div>
+        )}
 
         {/* Resumo do preço */}
         {nights > 0 && (
