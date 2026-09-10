@@ -66,9 +66,20 @@ export default function MercadoPagoCheckout({
           }),
         })
 
-        if (!response.ok) throw new Error('Erro ao criar preferência')
+        if (!response.ok) {
+          const error = await response.json()
+          throw new Error(error.error || 'Erro ao criar preferência')
+        }
 
-        const { preferenceId } = await response.json()
+        const data = await response.json()
+        const { preferenceId } = data
+
+        if (!preferenceId) {
+          console.error('PreferenceId não retornado:', data)
+          throw new Error('ID de preferência inválido')
+        }
+
+        console.log('PreferenceId recebido:', preferenceId)
 
         // Renderizar Wallet Brick com instância
         const bricksBuilder = mp.bricks()
