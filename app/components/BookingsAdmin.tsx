@@ -372,6 +372,7 @@ export default function BookingsAdmin() {
           <table className="w-full text-sm">
             <thead className="bg-gray-200 border-b-2 border-gray-300">
               <tr>
+                <th className="px-4 py-3 text-left font-semibold">#</th>
                 <th className="px-4 py-3 text-left font-semibold">🏠 Casa</th>
                 <th className="px-4 py-3 text-left font-semibold">👤 Hóspede</th>
                 <th className="px-4 py-3 text-left font-semibold">📅 Check-in</th>
@@ -384,6 +385,9 @@ export default function BookingsAdmin() {
             <tbody>
               {filteredBookings.map((booking) => (
                 <tr key={booking.id} className="border-b border-gray-200 hover:bg-gray-50">
+                  <td className="px-4 py-3 font-bold text-blue-700">
+                    #{booking.id}
+                  </td>
                   <td className="px-4 py-3 font-semibold text-gray-800">
                     {getHouseName(booking.house_id)}
                   </td>
