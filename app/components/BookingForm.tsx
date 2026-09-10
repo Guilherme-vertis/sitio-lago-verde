@@ -118,12 +118,14 @@ export default function BookingForm({ house, onSuccess }: BookingFormProps) {
 
       if (error) throw error
 
-      const bookingId = data[0]?.id
+      if (!data || !data[0]) throw new Error('Erro ao criar reserva')
+
+      const bookingId = data[0].id
       setSuccess(true)
 
       setTimeout(() => {
         router.push(`/reservas/checkout?booking=${bookingId}`)
-      }, 2000)
+      }, 1500)
     } catch (err) {
       setError('Erro ao fazer reserva: ' + (err as any).message)
     } finally {
