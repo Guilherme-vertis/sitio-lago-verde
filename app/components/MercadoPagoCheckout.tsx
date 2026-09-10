@@ -49,7 +49,7 @@ export default function MercadoPagoCheckout({
 
       try {
         // Inicializar Mercado Pago com a chave pública
-        window.MercadoPago.setLocale('pt-BR')
+        const mp = new window.MercadoPago(publicKey)
 
         // Criar preferência de pagamento
         const response = await fetch('/api/mercado-pago/create-preference', {
@@ -70,8 +70,10 @@ export default function MercadoPagoCheckout({
 
         const { preferenceId } = await response.json()
 
-        // Renderizar Wallet Brick
-        await window.MercadoPago.Bricks().create('wallet', {
+        // Renderizar Wallet Brick com instância
+        const bricksBuilder = mp.bricks()
+
+        await bricksBuilder.create('wallet', {
           initialization: {
             preferenceId: preferenceId,
           },
