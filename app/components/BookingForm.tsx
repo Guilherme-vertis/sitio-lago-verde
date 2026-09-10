@@ -123,8 +123,9 @@ export default function BookingForm({ house, onSuccess }: BookingFormProps) {
       const bookingId = data[0].id
       setSuccess(true)
 
+      // Redirecionar após 1.5 segundos
       setTimeout(() => {
-        router.push(`/reservas/checkout?booking=${bookingId}`)
+        window.location.href = `/reservas/checkout?booking=${bookingId}`
       }, 1500)
     } catch (err) {
       setError('Erro ao fazer reserva: ' + (err as any).message)
