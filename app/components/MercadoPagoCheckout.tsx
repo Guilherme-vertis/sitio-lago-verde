@@ -81,26 +81,23 @@ export default function MercadoPagoCheckout({
 
         console.log('PreferenceId recebido:', preferenceId)
 
-        // Renderizar Checkout Brick com instância
+        // Renderizar Wallet Brick com instância
         const bricksBuilder = mp.bricks()
 
-        await bricksBuilder.create('checkout', {
+        await bricksBuilder.create('wallet', 'wallet_container', {
           initialization: {
             preferenceId: preferenceId,
-            amount: amount,
           },
-          callbacks: {
-            onReady: () => {
-              console.log('Checkout Brick ready')
-              setLoading(false)
-            },
-            onSubmit: async (formData: any) => {
-              console.log('Pagamento iniciado:', formData)
-            },
-            onError: (error: any) => {
-              console.error('Erro no Brick:', error)
-              setError('Erro ao processar pagamento')
-            },
+          onReady: () => {
+            console.log('Wallet Brick ready')
+            setLoading(false)
+          },
+          onSubmit: async (formData: any) => {
+            console.log('Pagamento iniciado:', formData)
+          },
+          onError: (error: any) => {
+            console.error('Erro no Brick:', error)
+            setError('Erro ao processar pagamento')
           },
         })
       } catch (err) {
