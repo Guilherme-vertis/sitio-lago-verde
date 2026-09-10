@@ -31,28 +31,28 @@ export async function POST(request: NextRequest) {
     const bookingId = parseInt(payment.external_reference)
 
     if (payment.status === 'approved') {
-      // Atualizar status da reserva para paga (admin confirma depois)
+      // Atualizar status para pago (admin confirma depois)
       const { error } = await supabase
         .from('bookings')
         .update({
           status: 'paid',
           payment_id: payment.id,
           payment_status: 'approved',
+          admin_confirmed: false,
         })
         .eq('id', bookingId)
 
       if (error) {
         console.error('Erro ao atualizar reserva:', error)
       } else {
-        console.log(`Reserva ${bookingId} confirmada via Mercado Pago`)
+        console.log(`Reserva ${bookingId} pagamento aprovado via Mercado Pago`)
       }
     } else if (payment.status === 'pending') {
       const { error } = await supabase
         .from('bookings')
         .update({
-          status: 'pending',
-          payment_id: payment.id,
           payment_status: 'pending',
+          payment_id: payment.id,
         })
         .eq('id', bookingId)
 
@@ -62,8 +62,8 @@ export async function POST(request: NextRequest) {
         .from('bookings')
         .update({
           status: 'cancelled',
-          payment_id: payment.id,
           payment_status: 'rejected',
+          payment_id: payment.id,
         })
         .eq('id', bookingId)
 
